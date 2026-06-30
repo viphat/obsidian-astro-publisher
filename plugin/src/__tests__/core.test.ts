@@ -50,13 +50,27 @@ describe("markdown core", () => {
 
 describe("manifest core", () => {
   it("renders the files that will become public", () => {
-    expect(
-      buildPublishManifestText({
-        localNotePath: "Essays/How I Read Books.md",
-        destinationNotePath: "content/notes/how-i-read-books.md",
-        publicUrl: "https://notes.duongdao.family/notes/how-i-read-books",
-        assets: ["public/assets/notes/how-i-read-books/cover.png"]
-      })
-    ).toContain("public/assets/notes/how-i-read-books/cover.png");
+    const text = buildPublishManifestText({
+      localNotePath: "Essays/How I Read Books.md",
+      destinationNotePath: "content/notes/how-i-read-books.md",
+      publicUrl: "https://notes.duongdao.family/notes/how-i-read-books",
+      assets: ["public/assets/notes/how-i-read-books/cover.png"]
+    });
+    expect(text).toContain("public/assets/notes/how-i-read-books/cover.png");
+    expect(text).toContain("Local note: Essays/How I Read Books.md");
+    expect(text).toContain("Destination note: content/notes/how-i-read-books.md");
+    expect(text).toContain("Public URL: https://notes.duongdao.family/notes/how-i-read-books");
+    expect(text).toContain("Assets:");
+    expect(text).toContain("- public/assets/notes/how-i-read-books/cover.png");
+  });
+
+  it("renders no-assets placeholder when assets list is empty", () => {
+    const text = buildPublishManifestText({
+      localNotePath: "Essays/How I Read Books.md",
+      destinationNotePath: "content/notes/how-i-read-books.md",
+      publicUrl: "https://notes.duongdao.family/notes/how-i-read-books",
+      assets: []
+    });
+    expect(text).toContain("- No assets");
   });
 });

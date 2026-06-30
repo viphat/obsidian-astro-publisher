@@ -3,7 +3,7 @@ const VALID_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export function generateSlug(title: string): string {
   return title
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036F]/g, "")
     .toLowerCase()
     .replace(/đ/g, "d")
     .replace(/[^a-z0-9]+/g, "-")
