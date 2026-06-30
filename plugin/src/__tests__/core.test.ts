@@ -26,6 +26,27 @@ describe("frontmatter core", () => {
     expect(normalized.slug).toBe("how-i-read-books");
     expect(normalized.obsidian_path).toBeUndefined();
   });
+
+  it("preserves created_at supplied as a YAML Date object", () => {
+    // Obsidian writes unquoted dates, which js-yaml/gray-matter parse into
+    // Date objects rather than strings. created_at must survive that.
+    const normalized = normalizeFrontmatter(
+      { title: "How I Read Books", publish: true, created_at: new Date("2025-01-15T00:00:00.000Z") },
+      { generatedSlug: "how-i-read-books", generatedSourceId: "obsidian-123", defaultLanguage: "en", today: "2026-07-01" }
+    );
+
+    expect(normalized.created_at).toBe("2025-01-15");
+    expect(normalized.updated_at).toBe("2026-07-01");
+  });
+
+  it("falls back to today when created_at is absent or unparseable", () => {
+    const normalized = normalizeFrontmatter(
+      { title: "How I Read Books", publish: true, created_at: 12345 },
+      { generatedSlug: "how-i-read-books", generatedSourceId: "obsidian-123", defaultLanguage: "en", today: "2026-07-01" }
+    );
+
+    expect(normalized.created_at).toBe("2026-07-01");
+  });
 });
 
 describe("markdown core", () => {

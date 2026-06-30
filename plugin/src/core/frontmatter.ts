@@ -45,7 +45,7 @@ export function normalizeFrontmatter(
     description: typeof input.description === "string" ? input.description : undefined,
     tags,
     language: isSupportedLanguage(input.language) ? input.language : options.defaultLanguage,
-    created_at: typeof input.created_at === "string" ? input.created_at : options.today,
+    created_at: coerceDateString(input.created_at, options.today),
     updated_at: options.today,
     source: "obsidian",
     cover_image: typeof input.cover_image === "string" ? input.cover_image : undefined,
@@ -56,4 +56,17 @@ export function normalizeFrontmatter(
 
 function isSupportedLanguage(value: unknown): value is PublicFrontmatter["language"] {
   return value === "en" || value === "vi" || value === "zh" || value === "ja";
+}
+
+// Obsidian writes unquoted frontmatter dates, which gray-matter/js-yaml parse
+// into Date objects rather than strings. Coerce both shapes to a YYYY-MM-DD
+// string so an existing created_at is preserved instead of silently reset.
+function coerceDateString(value: unknown, fallback: string): string {
+  if (typeof value === "string" && value.trim()) {
+    return value.trim();
+  }
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  return fallback;
 }
