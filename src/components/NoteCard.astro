@@ -1,0 +1,24 @@
+---
+type Props = {
+  title: string;
+  description?: string;
+  href: string;
+  updatedAt: string;
+  tags?: string[];
+};
+
+const { title, description, href, updatedAt, tags = [] } = Astro.props;
+---
+
+<article class="note-card">
+  <a href={href}>
+    <h2>{title}</h2>
+    {description && <p>{description}</p>}
+    <small>{updatedAt}</small>
+  </a>
+  {tags.length > 0 && (
+    <ul aria-label="Tags">
+      {tags.map((tag) => <li><a href={`/tags/${tag}`}>{tag}</a></li>)}
+    </ul>
+  )}
+</article>

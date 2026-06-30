@@ -1,0 +1,15 @@
+---
+type Props = {
+  createdAt: string;
+  updatedAt: string;
+  tags?: string[];
+};
+
+const { createdAt, updatedAt, tags = [] } = Astro.props;
+---
+
+<div class="note-meta">
+  <span>Created {createdAt}</span>
+  <span>Updated {updatedAt}</span>
+  {tags.map((tag) => <a href={`/tags/${tag}`}>#{tag}</a>)}
+</div>

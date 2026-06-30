@@ -1,0 +1,26 @@
+---
+import { buildCanonicalUrl, buildNoteTitle, SITE_NAME } from "../lib/seo";
+
+type Props = {
+  title: string;
+  description?: string;
+  pathname: string;
+  image?: string;
+  isNote?: boolean;
+};
+
+const { title, description, pathname, image, isNote = false } = Astro.props;
+const pageTitle = isNote ? buildNoteTitle(title) : title;
+const canonicalUrl = buildCanonicalUrl(Astro.site?.toString() ?? "https://notes.duongdao.family", pathname);
+const metaDescription = description ?? "Public notes by Duong Dao.";
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={metaDescription} />
+<link rel="canonical" href={canonicalUrl} />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={metaDescription} />
+<meta property="og:url" content={canonicalUrl} />
+{image && <meta property="og:image" content={buildCanonicalUrl(Astro.site?.toString() ?? "https://notes.duongdao.family", image)} />}
+<meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />

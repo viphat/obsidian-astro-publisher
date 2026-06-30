@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import Seo from "../../components/Seo.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import { getUniqueSortedTags, sortNotesNewestFirst } from "../../lib/notes";
+import { getPublicPathForSlug } from "../../lib/slug";
+
+export async function getStaticPaths() {
+  const notes = (await getCollection("notes")).filter((note) => !note.data.draft);
+  return getUniqueSortedTags(notes).map((tag) => ({
+    params: { tag },
+    props: { tag, notes: sortNotesNewestFirst(notes.filter((note) => note.data.tags.includes(tag))) }
+  }));
+}
+
+const { tag, notes } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo title={`#${tag} | Duong Dao Notes`} pathname={`/tags/${tag}`} />
+  </head>
+  <body>
+    <main>
+      <a href="/">Duong Dao Notes</a>
+      <h1>#{tag}</h1>
+      <section aria-label={`Notes tagged ${tag}`}>
+        {notes.map((note) => (
+          <NoteCard
+            title={note.data.title}
+            description={note.data.description}
+            href={getPublicPathForSlug(note.data.slug)}
+            updatedAt={note.data.updated_at}
+            tags={note.data.tags}
+          />
+        ))}
+      </section>
+    </main>
+  </body>
+</html>

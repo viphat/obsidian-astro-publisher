@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import Seo from "../components/Seo.astro";
+import NoteCard from "../components/NoteCard.astro";
+import { getPublicPathForSlug } from "../lib/slug";
+import { sortNotesNewestFirst } from "../lib/notes";
+
+const notes = sortNotesNewestFirst((await getCollection("notes")).filter((note) => !note.data.draft));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo title="Duong Dao Notes" pathname="/" />
+  </head>
+  <body>
+    <main>
+      <h1>Duong Dao Notes</h1>
+      <section aria-label="Recent notes">
+        {notes.map((note) => (
+          <NoteCard
+            title={note.data.title}
+            description={note.data.description}
+            href={getPublicPathForSlug(note.data.slug)}
+            updatedAt={note.data.updated_at}
+            tags={note.data.tags}
+          />
+        ))}
+      </section>
+    </main>
+  </body>
+</html>
