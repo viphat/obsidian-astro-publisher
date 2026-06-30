@@ -36,3 +36,43 @@ In the GitHub repository settings, set Pages source to GitHub Actions.
 The workflow at `.github/workflows/deploy.yml` builds Astro and deploys the `dist` artifact.
 
 For the custom domain, configure `notes.duongdao.family`, add the matching DNS record, wait for verification, then enable HTTPS enforcement.
+
+## Manual Obsidian Plugin Installation
+
+Build the plugin:
+
+```sh
+npm run plugin:build
+```
+
+Copy these files into an Obsidian vault under `.obsidian/plugins/astro-publisher/`:
+
+- `plugin/manifest.json`
+- `plugin/main.js`
+
+Enable "Astro Publisher" in Obsidian community plugins.
+
+## GitHub Token
+
+Use a fine-grained GitHub personal access token restricted to the publishing repository.
+
+Grant repository contents read/write permission only.
+
+Do not use a token with access to unrelated private repositories.
+
+The token is stored in Obsidian plugin settings for this personal MVP.
+
+## Release Verification
+
+Run:
+
+```sh
+npm run verify
+```
+
+Expected result:
+
+- Site tests pass.
+- Astro check and build pass.
+- Plugin tests pass.
+- Plugin bundle builds.
