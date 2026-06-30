@@ -163,23 +163,31 @@ export default class AstroPublisherPlugin extends Plugin {
   }
 
   private async copyPublicUrl(): Promise<void> {
-    const slug = await this.resolveSlugFromActiveNote();
-    if (!slug) {
-      return;
-    }
+    try {
+      const slug = await this.resolveSlugFromActiveNote();
+      if (!slug) {
+        return;
+      }
 
-    const publicUrl = this.resolvePublicUrl(slug);
-    await navigator.clipboard.writeText(publicUrl);
-    new Notice(`Copied: ${publicUrl}`);
+      const publicUrl = this.resolvePublicUrl(slug);
+      await navigator.clipboard.writeText(publicUrl);
+      new Notice(`Copied: ${publicUrl}`);
+    } catch (error) {
+      new Notice(formatFailureNotice(error));
+    }
   }
 
   private async openPublicUrl(): Promise<void> {
-    const slug = await this.resolveSlugFromActiveNote();
-    if (!slug) {
-      return;
-    }
+    try {
+      const slug = await this.resolveSlugFromActiveNote();
+      if (!slug) {
+        return;
+      }
 
-    window.open(this.resolvePublicUrl(slug), "_blank");
+      window.open(this.resolvePublicUrl(slug), "_blank");
+    } catch (error) {
+      new Notice(formatFailureNotice(error));
+    }
   }
 
   private async publishAllMarkedNotes(): Promise<void> {
@@ -209,7 +217,8 @@ export default class AstroPublisherPlugin extends Plugin {
           adapter: this.buildPublisherAdapter(adapter, async () => true)
         });
         published += 1;
-      } catch {
+      } catch (error) {
+        console.error(error);
         failed += 1;
       }
     }
