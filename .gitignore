@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+
+plugin/node_modules/
+plugin/main.js
+plugin/styles.css
+plugin/data.json
+plugin/.obsidian/

@@ -1,0 +1,21 @@
+{
+  "name": "obsidian-notes-publish",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "test": "vitest run --config vitest.config.ts",
+    "plugin:build": "npm --prefix plugin run build",
+    "plugin:test": "npm --prefix plugin test",
+    "verify": "npm run test && npm run build && npm run plugin:test && npm run plugin:build"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
