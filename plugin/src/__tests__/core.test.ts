@@ -3,6 +3,8 @@ import { buildPublishManifestText } from "../core/manifest";
 import { normalizeFrontmatter } from "../core/frontmatter";
 import { collectEmbeds, transformObsidianMarkdown } from "../core/markdown";
 import { generateSlug, isValidSlug } from "../core/slug";
+import { deriveSourceId } from "../core/identity";
+import { formatLocalDate } from "../core/dates";
 
 describe("slug core", () => {
   it("transliterates Vietnamese titles into v1-safe slugs", () => {
@@ -46,6 +48,33 @@ describe("frontmatter core", () => {
     );
 
     expect(normalized.created_at).toBe("2026-07-01");
+  });
+});
+
+describe("source id core", () => {
+  it("is deterministic for the same note path", () => {
+    expect(deriveSourceId("Essays/How I Read Books.md")).toBe(deriveSourceId("Essays/How I Read Books.md"));
+  });
+
+  it("differs for different note paths", () => {
+    expect(deriveSourceId("Essays/How I Read Books.md")).not.toBe(deriveSourceId("Essays/Other Note.md"));
+  });
+
+  it("does not reveal the vault path and has the obsidian prefix", () => {
+    const id = deriveSourceId("Private/Secret Folder/Note.md");
+    expect(id).toMatch(/^obsidian-[0-9a-z]+$/);
+    expect(id).not.toContain("Secret");
+    expect(id).not.toContain("/");
+  });
+});
+
+describe("local date core", () => {
+  it("formats a date as YYYY-MM-DD using local calendar fields", () => {
+    expect(formatLocalDate(new Date(2026, 5, 30, 23, 30, 0))).toBe("2026-06-30");
+  });
+
+  it("zero-pads single-digit months and days", () => {
+    expect(formatLocalDate(new Date(2026, 0, 5, 1, 0, 0))).toBe("2026-01-05");
   });
 });
 

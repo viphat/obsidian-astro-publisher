@@ -1,5 +1,7 @@
 import { App, TFile } from "obsidian";
 import { generateSlug } from "./core/slug";
+import { deriveSourceId } from "./core/identity";
+import { formatLocalDate } from "./core/dates";
 
 export class ObsidianPublisherAdapter {
   constructor(private readonly app: App) {}
@@ -74,10 +76,13 @@ export class ObsidianPublisherAdapter {
   }
 
   today(): string {
-    return new Date().toISOString().slice(0, 10);
+    return formatLocalDate(new Date());
   }
 
-  generateSourceId(): string {
-    return `obsidian-${crypto.randomUUID()}`;
+  // Derived from the note path so the id stays stable across re-publishes even
+  // when it is never persisted to the local note. The path is hashed, never
+  // exposed. See core/identity.ts.
+  generateSourceId(seed: string): string {
+    return deriveSourceId(seed);
   }
 }

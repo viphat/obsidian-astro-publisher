@@ -68,7 +68,7 @@ export default class AstroPublisherPlugin extends Plugin {
       listPublishedNotes: () => adapter.listPublishedNotes(),
       confirm,
       today: () => adapter.today(),
-      generateSourceId: () => adapter.generateSourceId()
+      generateSourceId: (seed) => adapter.generateSourceId(seed)
     };
   }
 

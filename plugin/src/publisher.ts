@@ -23,7 +23,7 @@ export type PublisherAdapter = {
   listPublishedNotes(): Promise<Map<string, string>>;
   confirm(message: string): Promise<boolean>;
   today(): string;
-  generateSourceId(): string;
+  generateSourceId(seed: string): string;
 };
 
 export type PublishCurrentNoteInput = {
@@ -38,7 +38,7 @@ export async function publishCurrentNote(input: PublishCurrentNoteInput): Promis
   const generatedSlug = generateSlug(input.note.basename);
   const frontmatter = normalizeFrontmatter(parsed.data, {
     generatedSlug,
-    generatedSourceId: input.adapter.generateSourceId(),
+    generatedSourceId: input.adapter.generateSourceId(input.note.path),
     defaultLanguage: input.settings.defaultLanguage,
     today: input.adapter.today()
   });
