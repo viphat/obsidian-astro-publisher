@@ -28,3 +28,11 @@ Run `npm install` at the repository root.
 Run `npm run dev` to start the Astro site.
 
 Run `npm run verify` before committing implementation changes.
+
+## GitHub Pages Deployment
+
+In the GitHub repository settings, set Pages source to GitHub Actions.
+
+The workflow at `.github/workflows/deploy.yml` builds Astro and deploys the `dist` artifact.
+
+For the custom domain, configure `notes.duongdao.family`, add the matching DNS record, wait for verification, then enable HTTPS enforcement.
