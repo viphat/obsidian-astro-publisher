@@ -2,7 +2,7 @@ import matter from "gray-matter";
 import type { AstroPublisherSettings } from "./settings";
 import { normalizeFrontmatter } from "./core/frontmatter";
 import { assertNoAssetNameCollisions } from "./core/assets";
-import { generateSlug } from "./core/slug";
+import { generateSlug, isValidSlug } from "./core/slug";
 import { buildPublishManifestText } from "./core/manifest";
 import { transformObsidianMarkdown } from "./core/markdown";
 
@@ -42,6 +42,10 @@ export async function publishCurrentNote(input: PublishCurrentNoteInput): Promis
     defaultLanguage: input.settings.defaultLanguage,
     today: input.adapter.today()
   });
+
+  if (!isValidSlug(frontmatter.slug)) {
+    throw new Error(`Cannot publish because the slug "${frontmatter.slug}" is not a valid v1 slug (use lowercase letters, digits, and single hyphens only).`);
+  }
 
   if (!frontmatter.publish && input.settings.confirmBeforePublishIfPublishFalse) {
     const allowed = await input.adapter.confirm("This note is not marked with publish: true. Publishing will make it public on the internet. Continue?");

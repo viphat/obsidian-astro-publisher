@@ -16,6 +16,10 @@ describe("site slug helpers", () => {
   it("builds the public note path", () => {
     expect(getPublicPathForSlug("how-i-read-books")).toBe("/notes/how-i-read-books");
   });
+
+  it("throws on an invalid slug", () => {
+    expect(() => getPublicPathForSlug("Bad Slug")).toThrow();
+  });
 });
 
 describe("site note helpers", () => {
