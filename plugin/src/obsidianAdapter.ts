@@ -61,6 +61,18 @@ export class ObsidianPublisherAdapter {
     });
   }
 
+  getMarkdownFiles(): TFile[] {
+    return this.app.vault.getMarkdownFiles();
+  }
+
+  async readNoteFile(file: TFile): Promise<{ path: string; basename: string; markdown: string }> {
+    return {
+      path: file.path,
+      basename: file.basename,
+      markdown: await this.app.vault.read(file)
+    };
+  }
+
   today(): string {
     return new Date().toISOString().slice(0, 10);
   }

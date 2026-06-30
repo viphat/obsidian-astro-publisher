@@ -106,3 +106,53 @@ export async function publishCurrentNote(input: PublishCurrentNoteInput): Promis
 
   return publicUrl;
 }
+
+export type UnpublishInput = {
+  slug: string;
+  settings: AstroPublisherSettings;
+  github: {
+    getFile(path: string): Promise<{ sha: string } | null>;
+    listDirectory(path: string): Promise<Array<{ path: string; sha: string }>>;
+    deleteFile(input: { path: string; sha: string; message: string }): Promise<void>;
+  };
+  deleteAssets: boolean;
+};
+
+export type UnpublishResult = {
+  status: "unpublished" | "already-unpublished";
+  deletedAssets: number;
+};
+
+export async function unpublishNote(input: UnpublishInput): Promise<UnpublishResult> {
+  const notePath = `${input.settings.notesDirectory}/${input.slug}.md`;
+  const existingNote = await input.github.getFile(notePath);
+
+  // A missing Markdown file is treated as "already unpublished" (spec 11.4),
+  // not an error, so the caller can show a clear notice.
+  if (!existingNote) {
+    return { status: "already-unpublished", deletedAssets: 0 };
+  }
+
+  await input.github.deleteFile({
+    path: notePath,
+    sha: existingNote.sha,
+    message: `Unpublish note: ${input.slug}`
+  });
+
+  if (!input.deleteAssets) {
+    return { status: "unpublished", deletedAssets: 0 };
+  }
+
+  const assetDirectory = `${input.settings.assetsDirectory}/${input.slug}`;
+  const assets = await input.github.listDirectory(assetDirectory);
+
+  for (const asset of assets) {
+    await input.github.deleteFile({
+      path: asset.path,
+      sha: asset.sha,
+      message: `Unpublish asset: ${input.slug}/${asset.path.split("/").pop() ?? "asset"}`
+    });
+  }
+
+  return { status: "unpublished", deletedAssets: assets.length };
+}
