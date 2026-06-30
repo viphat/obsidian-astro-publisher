@@ -5,7 +5,7 @@ export class App {}
 export class Plugin {
   app: App = new App();
   manifest = {};
-  loadData = async () => ({});
+  loadData = async (): Promise<unknown> => null;
   saveData = async (_data: unknown) => {};
   addSettingTab = (_tab: unknown) => {};
   addCommand = (_cmd: unknown) => {};
