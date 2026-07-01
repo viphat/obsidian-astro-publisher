@@ -1,4 +1,6 @@
 ---
+import { getTagPath } from "../lib/slug";
+
 type Props = {
   createdAt: string;
   updatedAt: string;
@@ -11,5 +13,5 @@ const { createdAt, updatedAt, tags = [] } = Astro.props;
 <div class="note-meta">
   <span>Created {createdAt}</span>
   <span>Updated {updatedAt}</span>
-  {tags.map((tag) => <a href={`/tags/${tag}`}>#{tag}</a>)}
+  {tags.map((tag) => <a href={getTagPath(tag)}>#{tag}</a>)}
 </div>

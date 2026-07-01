@@ -39,11 +39,19 @@ export class GitHubContentsClient {
     }
     await assertOk(response);
     const json = await response.json();
-    return {
-      path: json.path,
-      sha: json.sha,
-      content: typeof json.content === "string" ? json.content : undefined
-    };
+    let content = typeof json.content === "string" && json.content.length > 0 ? json.content : undefined;
+
+    // Files larger than 1MB come back with the body omitted (content:"",
+    // encoding:"none") and a download_url. Fetch the raw bytes and re-encode to
+    // base64 so callers always get usable content — the source_id ownership
+    // guard in the publisher depends on reading the existing note's frontmatter.
+    if (content === undefined && typeof json.download_url === "string") {
+      const raw = await this.fetchImpl(json.download_url);
+      await assertOk(raw);
+      content = Buffer.from(await raw.arrayBuffer()).toString("base64");
+    }
+
+    return { path: json.path, sha: json.sha, content };
   }
 
   async listDirectory(path: string): Promise<GitHubFile[]> {

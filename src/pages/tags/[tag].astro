@@ -2,14 +2,14 @@
 import { getCollection } from "astro:content";
 import Seo from "../../components/Seo.astro";
 import NoteCard from "../../components/NoteCard.astro";
-import { getUniqueSortedTags, sortNotesNewestFirst } from "../../lib/notes";
+import { getPublicNotes, getTagGroups, sortNotesNewestFirst } from "../../lib/notes";
 import { getPublicPathForSlug } from "../../lib/slug";
 
 export async function getStaticPaths() {
-  const notes = (await getCollection("notes")).filter((note) => !note.data.draft);
-  return getUniqueSortedTags(notes).map((tag) => ({
-    params: { tag },
-    props: { tag, notes: sortNotesNewestFirst(notes.filter((note) => note.data.tags.includes(tag))) }
+  const notes = getPublicNotes(await getCollection("notes"));
+  return getTagGroups(notes).map((group) => ({
+    params: { tag: group.slug },
+    props: { tag: group.label, notes: sortNotesNewestFirst(group.notes) }
   }));
 }
 

@@ -3,9 +3,9 @@ import { getCollection } from "astro:content";
 import Seo from "../components/Seo.astro";
 import NoteCard from "../components/NoteCard.astro";
 import { getPublicPathForSlug } from "../lib/slug";
-import { sortNotesNewestFirst } from "../lib/notes";
+import { getPublicNotes, sortNotesNewestFirst } from "../lib/notes";
 
-const notes = sortNotesNewestFirst((await getCollection("notes")).filter((note) => !note.data.draft));
+const notes = sortNotesNewestFirst(getPublicNotes(await getCollection("notes")));
 ---
 
 <!doctype html>

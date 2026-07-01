@@ -1,9 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
 import NoteLayout from "../../layouts/NoteLayout.astro";
+import { getPublicNotes } from "../../lib/notes";
 
 export async function getStaticPaths() {
-  const notes = (await getCollection("notes")).filter((note) => !note.data.draft);
+  const notes = getPublicNotes(await getCollection("notes"));
   return notes.map((note) => ({
     params: { slug: note.data.slug },
     props: { note }

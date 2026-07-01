@@ -1,4 +1,6 @@
 ---
+import { getTagPath } from "../lib/slug";
+
 type Props = {
   title: string;
   description?: string;
@@ -18,7 +20,7 @@ const { title, description, href, updatedAt, tags = [] } = Astro.props;
   </a>
   {tags.length > 0 && (
     <ul aria-label="Tags">
-      {tags.map((tag) => <li><a href={`/tags/${tag}`}>{tag}</a></li>)}
+      {tags.map((tag) => <li><a href={getTagPath(tag)}>{tag}</a></li>)}
     </ul>
   )}
 </article>

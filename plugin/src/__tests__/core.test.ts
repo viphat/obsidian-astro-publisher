@@ -49,6 +49,22 @@ describe("frontmatter core", () => {
 
     expect(normalized.created_at).toBe("2026-07-01");
   });
+
+  const baseOpts = { generatedSlug: "t", generatedSourceId: "id", defaultLanguage: "en" as const, today: "2026-07-01" };
+
+  it("parses tags written as a comma-separated YAML scalar string", () => {
+    const normalized = normalizeFrontmatter({ title: "T", tags: "productivity, obsidian" }, baseOpts);
+    expect(normalized.tags).toEqual(["productivity", "obsidian"]);
+  });
+
+  it("wraps a single scalar tag and coerces non-string array entries", () => {
+    expect(normalizeFrontmatter({ title: "T", tags: "solo" }, baseOpts).tags).toEqual(["solo"]);
+    expect(normalizeFrontmatter({ title: "T", tags: [1, "a", { x: 1 }] }, baseOpts).tags).toEqual(["1", "a"]);
+  });
+
+  it("coerces a numeric description to a string instead of dropping it", () => {
+    expect(normalizeFrontmatter({ title: "T", description: 2026 }, baseOpts).description).toBe("2026");
+  });
 });
 
 describe("source id core", () => {
@@ -95,6 +111,43 @@ describe("markdown core", () => {
 
   it("collects embed references", () => {
     expect(collectEmbeds("![[cover.png]] and ![[diagram.png|Diagram]]")).toEqual(["cover.png", "diagram.png"]);
+  });
+
+  it("does not rewrite wiki syntax inside fenced or inline code", () => {
+    const fenced = "```\n![[diagram.png]] and [[How I Read Books]]\n```";
+    const out = transformObsidianMarkdown(fenced, { publishedNotes: published, slug: "current" });
+    expect(out.markdown).toBe(fenced);
+    expect(out.assetReferences).toEqual([]);
+
+    expect(transformObsidianMarkdown("Use `[[How I Read Books]]` syntax.", { publishedNotes: published, slug: "current" }).markdown).toBe(
+      "Use `[[How I Read Books]]` syntax."
+    );
+  });
+
+  it("renders a note transclusion as a link instead of aborting", () => {
+    expect(transformObsidianMarkdown("![[How I Read Books]]", { publishedNotes: published, slug: "current" }).markdown).toBe(
+      "[How I Read Books](/notes/how-i-read-books)"
+    );
+    expect(transformObsidianMarkdown("![[Private Note]]", { publishedNotes: published, slug: "current" }).markdown).toBe("Private Note");
+  });
+
+  it("resolves heading/block anchors and is case-insensitive", () => {
+    expect(transformObsidianMarkdown("[[How I Read Books#Conclusion]]", { publishedNotes: published, slug: "current" }).markdown).toBe(
+      "[How I Read Books#Conclusion](/notes/how-i-read-books#conclusion)"
+    );
+    expect(transformObsidianMarkdown("[[how i read books]]", { publishedNotes: published, slug: "current" }).markdown).toBe(
+      "[how i read books](/notes/how-i-read-books)"
+    );
+  });
+
+  it("url-encodes asset filenames with spaces and parentheses", () => {
+    expect(transformObsidianMarkdown("![[my cover (final).png|Cover]]", { publishedNotes: published, slug: "s" }).markdown).toBe(
+      "![Cover](/assets/notes/s/my%20cover%20%28final%29.png)"
+    );
+  });
+
+  it("rejects embedded asset paths that try to traverse out of the slug folder", () => {
+    expect(() => transformObsidianMarkdown("![[../secret.png]]", { publishedNotes: published, slug: "s" })).toThrow(/not allowed/);
   });
 });
 

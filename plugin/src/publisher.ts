@@ -44,7 +44,10 @@ export async function publishCurrentNote(input: PublishCurrentNoteInput): Promis
   });
 
   if (!isValidSlug(frontmatter.slug)) {
-    throw new Error(`Cannot publish because the slug "${frontmatter.slug}" is not a valid v1 slug (use lowercase letters, digits, and single hyphens only).`);
+    const hint = frontmatter.slug
+      ? "use lowercase letters, digits, and single hyphens only"
+      : `the title "${input.note.basename}" produced no slug — add a "slug:" field to the note's frontmatter`;
+    throw new Error(`Cannot publish because the slug "${frontmatter.slug}" is not a valid v1 slug (${hint}).`);
   }
 
   if (!frontmatter.publish && input.settings.confirmBeforePublishIfPublishFalse) {

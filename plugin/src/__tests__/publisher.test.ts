@@ -81,9 +81,47 @@ describe("publishCurrentNote", () => {
           generateSourceId: () => "obsidian-123"
         }
       })
-    ).rejects.toThrow(/not a valid v1 slug/);
+    ).rejects.toThrow(/produced no slug/);
 
     expect(github.putFile).not.toHaveBeenCalled();
+  });
+
+  it("publishes a CJK-titled note when an explicit slug is provided", async () => {
+    const github = {
+      getFile: vi.fn().mockResolvedValue(null),
+      putFile: vi.fn()
+    };
+
+    const url = await publishCurrentNote({
+      note: { path: "日本語.md", basename: "日本語", markdown: "---\ntitle: 日本語\nslug: japanese-note\npublish: true\n---\nBody" },
+      settings: {
+        githubOwner: "duongdao",
+        githubRepo: "notes-site",
+        githubBranch: "main",
+        githubToken: "token",
+        siteBaseUrl: "https://notes.duongdao.family",
+        notesDirectory: "content/notes",
+        assetsDirectory: "public/assets/notes",
+        defaultLanguage: "en",
+        autoGenerateSlug: true,
+        updateLocalFrontmatterAfterPublish: false,
+        confirmBeforePublishIfPublishFalse: true,
+        confirmBeforeUnpublish: true,
+        requirePublishManifestConfirmation: false
+      },
+      github,
+      adapter: {
+        readBinaryAsset: vi.fn(),
+        writeFrontmatter: vi.fn(),
+        listPublishedNotes: vi.fn().mockResolvedValue(new Map()),
+        confirm: vi.fn().mockResolvedValue(true),
+        today: () => "2026-06-30",
+        generateSourceId: () => "obsidian-123"
+      }
+    });
+
+    expect(url).toBe("https://notes.duongdao.family/notes/japanese-note");
+    expect(github.putFile).toHaveBeenCalledWith(expect.objectContaining({ path: "content/notes/japanese-note.md" }));
   });
 
   it("re-publishes the same note without a self-collision when frontmatter is never written back", async () => {

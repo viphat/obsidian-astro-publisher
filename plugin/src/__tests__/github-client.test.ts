@@ -59,6 +59,44 @@ describe("GitHubContentsClient", () => {
     );
   });
 
+  describe("getFile", () => {
+    it("returns null on 404", async () => {
+      const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({ message: "Not Found" }) });
+      const client = new GitHubContentsClient({ owner: "duongdao", repo: "notes-site", branch: "main", token: "token", fetch: fetchMock });
+      expect(await client.getFile("content/notes/missing.md")).toBeNull();
+    });
+
+    it("fetches raw content via download_url when the body is omitted for files >1MB", async () => {
+      // GitHub omits the body (content:"", encoding:"none") for files >1MB and
+      // exposes a download_url. getFile must fetch it so the source_id guard works.
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            path: "content/notes/big.md",
+            sha: "big-sha",
+            content: "",
+            encoding: "none",
+            download_url: "https://raw.githubusercontent.com/duongdao/notes-site/main/content/notes/big.md"
+          })
+        })
+        .mockResolvedValueOnce({ ok: true, status: 200, arrayBuffer: async () => new TextEncoder().encode("raw note body").buffer });
+      const client = new GitHubContentsClient({ owner: "duongdao", repo: "notes-site", branch: "main", token: "token", fetch: fetchMock });
+
+      const file = await client.getFile("content/notes/big.md");
+
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock.mock.calls[1][0]).toBe("https://raw.githubusercontent.com/duongdao/notes-site/main/content/notes/big.md");
+      expect(file).toEqual({
+        path: "content/notes/big.md",
+        sha: "big-sha",
+        content: Buffer.from("raw note body", "utf8").toString("base64")
+      });
+    });
+  });
+
   describe("listDirectory", () => {
     it("returns [] when the path does not exist (404)", async () => {
       const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({ message: "Not Found" }) });

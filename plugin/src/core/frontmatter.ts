@@ -34,7 +34,6 @@ export function normalizeFrontmatter(
 
   const slug = typeof input.slug === "string" && input.slug.trim() ? input.slug.trim() : options.generatedSlug;
   const sourceId = typeof input.source_id === "string" && input.source_id.trim() ? input.source_id.trim() : options.generatedSourceId;
-  const tags = Array.isArray(input.tags) ? input.tags.filter((tag): tag is string => typeof tag === "string") : [];
 
   return {
     title,
@@ -42,16 +41,54 @@ export function normalizeFrontmatter(
     source_id: sourceId,
     publish: input.publish === true,
     draft: input.draft === true,
-    description: typeof input.description === "string" ? input.description : undefined,
-    tags,
+    description: coerceOptionalString(input.description),
+    tags: normalizeTags(input.tags),
     language: isSupportedLanguage(input.language) ? input.language : options.defaultLanguage,
     created_at: coerceDateString(input.created_at, options.today),
     updated_at: options.today,
     source: "obsidian",
-    cover_image: typeof input.cover_image === "string" ? input.cover_image : undefined,
-    canonical_url: typeof input.canonical_url === "string" ? input.canonical_url : undefined,
+    cover_image: coerceOptionalString(input.cover_image),
+    canonical_url: coerceOptionalString(input.canonical_url),
     obsidian_path: options.includeObsidianPath
   };
+}
+
+// Obsidian authors commonly write `tags: a, b` (a YAML scalar string) or a
+// single scalar instead of a YAML list. gray-matter parses those as a string /
+// number, which the old Array.isArray-only check silently dropped. Accept both
+// shapes and coerce non-string scalar entries instead of discarding them.
+function normalizeTags(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .filter((tag) => tag !== null && tag !== undefined && typeof tag !== "object")
+      .map((tag) => String(tag).trim())
+      .filter((tag) => tag.length > 0);
+  }
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return [String(value)];
+  }
+  return [];
+}
+
+// Optional display fields: keep strings, coerce scalar numbers/booleans/dates to
+// a string rather than silently dropping author-provided values.
+function coerceOptionalString(value: unknown): string | undefined {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  return undefined;
 }
 
 function isSupportedLanguage(value: unknown): value is PublicFrontmatter["language"] {
