@@ -3,7 +3,7 @@ import { buildCanonicalUrl, buildNoteTitle } from "../src/lib/seo";
 
 describe("SEO helpers", () => {
   it("builds the default note title", () => {
-    expect(buildNoteTitle("How I Read Books")).toBe("How I Read Books | Duong Dao Notes");
+    expect(buildNoteTitle("How I Read Books")).toBe("How I Read Books | Dương Đào Notes");
   });
 
   it("builds canonical URLs without duplicate slashes", () => {

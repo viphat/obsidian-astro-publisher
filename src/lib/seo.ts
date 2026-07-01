@@ -1,4 +1,4 @@
-export const SITE_NAME = "Duong Dao Notes";
+export const SITE_NAME = "Dương Đào Notes";
 
 export function buildNoteTitle(title: string): string {
   return `${title} | ${SITE_NAME}`;

@@ -4,6 +4,6 @@
   "version": "0.1.0",
   "minAppVersion": "1.5.0",
   "description": "Publish selected Obsidian notes to an Astro static site through GitHub Pages.",
-  "author": "Duong Dao",
+  "author": "Dương Đào",
   "isDesktopOnly": false
 }

@@ -12,7 +12,7 @@ type Props = {
 const { title, description, pathname, image, isNote = false } = Astro.props;
 const pageTitle = isNote ? buildNoteTitle(title) : title;
 const canonicalUrl = buildCanonicalUrl(Astro.site?.toString() ?? "https://notes.duongdao.family", pathname);
-const metaDescription = description ?? "Public notes by Duong Dao.";
+const metaDescription = description ?? "Public notes by Dương Đào.";
 ---
 
 <title>{pageTitle}</title>

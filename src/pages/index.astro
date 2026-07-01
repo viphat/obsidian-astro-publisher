@@ -8,7 +8,7 @@ import { getPublicNotes, sortNotesNewestFirst } from "../lib/notes";
 const notes = sortNotesNewestFirst(getPublicNotes(await getCollection("notes")));
 ---
 
-<BaseLayout title="Duong Dao Notes" pathname="/" variant="list">
+<BaseLayout title="Dương Đào Notes" pathname="/" variant="list">
   <p class="index-lead">
     {notes.length} {notes.length === 1 ? "note" : "notes"}, newest first
   </p>

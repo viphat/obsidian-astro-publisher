@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 const { tag, notes } = Astro.props;
 ---
 
-<BaseLayout title={`#${tag} | Duong Dao Notes`} pathname={`/tags/${tag}`} variant="list">
+<BaseLayout title={`#${tag} | Dương Đào Notes`} pathname={`/tags/${tag}`} variant="list">
   <header class="tag-header">
     <p class="tag-back"><a href="/">← All notes</a></p>
     <h1 class="tag-title"><span class="tag-hash">#</span>{tag}</h1>
