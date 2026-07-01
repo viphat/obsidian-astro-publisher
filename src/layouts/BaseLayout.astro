@@ -1,0 +1,58 @@
+---
+import "../styles/global.css";
+import Seo from "../components/Seo.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  pathname: string;
+  image?: string;
+  isNote?: boolean;
+  lang?: string;
+  variant?: "list" | "note";
+};
+
+const {
+  title,
+  description,
+  pathname,
+  image,
+  isNote = false,
+  lang = "en",
+  variant = "list"
+} = Astro.props;
+
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16150f" media="(prefers-color-scheme: dark)" />
+    <Seo title={title} description={description} pathname={pathname} image={image} isNote={isNote} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="masthead">
+      <a class="wordmark" href="/">
+        <span class="wordmark-en">Duong Dao Notes</span>
+        <span class="wordmark-zh" aria-hidden="true">笔记</span>
+      </a>
+      {variant === "list" && (
+        <p class="masthead-tagline">
+          A public notebook — kept in the open, in whatever language the thought arrived in.
+        </p>
+      )}
+    </header>
+    <main id="main" class={`shell shell-${variant}`}>
+      <slot />
+    </main>
+    <footer class="colophon">
+      <p>Written in Obsidian, published to the open web.</p>
+      <p>© {year} Duong Dao</p>
+    </footer>
+  </body>
+</html>

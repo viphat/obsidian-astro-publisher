@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import Seo from "../components/Seo.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import NoteCard from "../components/NoteCard.astro";
 import { getPublicPathForSlug } from "../lib/slug";
 import { getPublicNotes, sortNotesNewestFirst } from "../lib/notes";
@@ -8,27 +8,45 @@ import { getPublicNotes, sortNotesNewestFirst } from "../lib/notes";
 const notes = sortNotesNewestFirst(getPublicNotes(await getCollection("notes")));
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <Seo title="Duong Dao Notes" pathname="/" />
-  </head>
-  <body>
-    <main>
-      <h1>Duong Dao Notes</h1>
-      <section aria-label="Recent notes">
-        {notes.map((note) => (
-          <NoteCard
-            title={note.data.title}
-            description={note.data.description}
-            href={getPublicPathForSlug(note.data.slug)}
-            updatedAt={note.data.updated_at}
-            tags={note.data.tags}
-          />
-        ))}
-      </section>
-    </main>
-  </body>
-</html>
+<BaseLayout title="Duong Dao Notes" pathname="/" variant="list">
+  <p class="index-lead">
+    {notes.length} {notes.length === 1 ? "note" : "notes"}, newest first
+  </p>
+  {notes.length > 0 ? (
+    <ol class="note-index">
+      {notes.map((note) => (
+        <NoteCard
+          title={note.data.title}
+          description={note.data.description}
+          href={getPublicPathForSlug(note.data.slug)}
+          updatedAt={note.data.updated_at}
+          tags={note.data.tags}
+        />
+      ))}
+    </ol>
+  ) : (
+    <p class="index-empty">No notes published yet. Check back soon.</p>
+  )}
+</BaseLayout>
+
+<style>
+  .index-lead {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--ink-faint);
+    text-transform: lowercase;
+  }
+
+  .note-index {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .index-empty {
+    margin-top: 2rem;
+    color: var(--ink-soft);
+  }
+</style>

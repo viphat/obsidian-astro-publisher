@@ -12,15 +12,133 @@ type Props = {
 const { title, description, href, updatedAt, tags = [] } = Astro.props;
 ---
 
-<article class="note-card">
-  <a href={href}>
-    <h2>{title}</h2>
-    {description && <p>{description}</p>}
-    <small>{updatedAt}</small>
+<li class="note-row">
+  <a class="note-link" href={href}>
+    <time class="note-date" datetime={updatedAt}>{updatedAt}</time>
+    <span class="note-title">{title}</span>
+    {description && <span class="note-desc">{description}</span>}
   </a>
   {tags.length > 0 && (
-    <ul aria-label="Tags">
-      {tags.map((tag) => <li><a href={getTagPath(tag)}>{tag}</a></li>)}
+    <ul class="note-tags" aria-label="Tags">
+      {tags.map((tag) => (
+        <li>
+          <a href={getTagPath(tag)}>#{tag}</a>
+        </li>
+      ))}
     </ul>
   )}
-</article>
+</li>
+
+<style>
+  .note-row {
+    position: relative;
+    padding: 1.4rem 0 1.4rem 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* The signature: a seal-red margin rule that runs down the line you're
+     reading, like a red pen in the margin. Quiet until hover/focus. */
+  .note-row::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--seal);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.25s ease;
+  }
+
+  .note-row:hover::before,
+  .note-row:focus-within::before {
+    transform: scaleY(1);
+  }
+
+  .note-link {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    grid-template-areas:
+      "date title"
+      "date desc";
+    column-gap: 1.5rem;
+    row-gap: 0.3rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .note-date {
+    grid-area: date;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--ink-faint);
+    padding-top: 0.35em;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .note-title {
+    grid-area: title;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    transition: color 0.2s ease;
+  }
+
+  .note-row:hover .note-title,
+  .note-row:focus-within .note-title {
+    color: var(--seal);
+  }
+
+  .note-desc {
+    grid-area: desc;
+    color: var(--ink-soft);
+    font-size: 0.975rem;
+    line-height: 1.55;
+  }
+
+  .note-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.85rem;
+    margin: 0.7rem 0 0;
+    padding: 0;
+    grid-column: 2;
+    margin-left: calc(6.5rem + 1.5rem);
+  }
+
+  .note-tags a {
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+
+  .note-tags a:hover {
+    color: var(--seal);
+  }
+
+  @media (max-width: 34rem) {
+    .note-link {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "date"
+        "title"
+        "desc";
+      row-gap: 0.35rem;
+    }
+
+    .note-date {
+      padding-top: 0;
+    }
+
+    .note-tags {
+      margin-left: 0;
+    }
+  }
+</style>

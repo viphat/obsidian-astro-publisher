@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import Seo from "../../components/Seo.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import NoteCard from "../../components/NoteCard.astro";
 import { getPublicNotes, getTagGroups, sortNotesNewestFirst } from "../../lib/notes";
 import { getPublicPathForSlug } from "../../lib/slug";
@@ -16,28 +16,71 @@ export async function getStaticPaths() {
 const { tag, notes } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <Seo title={`#${tag} | Duong Dao Notes`} pathname={`/tags/${tag}`} />
-  </head>
-  <body>
-    <main>
-      <a href="/">Duong Dao Notes</a>
-      <h1>#{tag}</h1>
-      <section aria-label={`Notes tagged ${tag}`}>
-        {notes.map((note) => (
-          <NoteCard
-            title={note.data.title}
-            description={note.data.description}
-            href={getPublicPathForSlug(note.data.slug)}
-            updatedAt={note.data.updated_at}
-            tags={note.data.tags}
-          />
-        ))}
-      </section>
-    </main>
-  </body>
-</html>
+<BaseLayout title={`#${tag} | Duong Dao Notes`} pathname={`/tags/${tag}`} variant="list">
+  <header class="tag-header">
+    <p class="tag-back"><a href="/">← All notes</a></p>
+    <h1 class="tag-title"><span class="tag-hash">#</span>{tag}</h1>
+    <p class="tag-count">
+      {notes.length} {notes.length === 1 ? "note" : "notes"}
+    </p>
+  </header>
+  <ol class="note-index">
+    {notes.map((note) => (
+      <NoteCard
+        title={note.data.title}
+        description={note.data.description}
+        href={getPublicPathForSlug(note.data.slug)}
+        updatedAt={note.data.updated_at}
+        tags={note.data.tags}
+      />
+    ))}
+  </ol>
+</BaseLayout>
+
+<style>
+  .tag-header {
+    margin-bottom: 0.5rem;
+  }
+
+  .tag-back {
+    margin: 0 0 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--ink-faint);
+  }
+
+  .tag-back a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .tag-back a:hover {
+    color: var(--seal);
+  }
+
+  .tag-title {
+    font-family: var(--font-display);
+    font-size: var(--step-h1);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .tag-hash {
+    color: var(--seal);
+  }
+
+  .tag-count {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--ink-faint);
+  }
+
+  .note-index {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>

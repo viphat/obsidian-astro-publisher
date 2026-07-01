@@ -8,10 +8,63 @@ type Props = {
 };
 
 const { createdAt, updatedAt, tags = [] } = Astro.props;
+const wasUpdated = updatedAt !== createdAt;
 ---
 
 <div class="note-meta">
-  <span>Created {createdAt}</span>
-  <span>Updated {updatedAt}</span>
-  {tags.map((tag) => <a href={getTagPath(tag)}>#{tag}</a>)}
+  <time datetime={createdAt}>{createdAt}</time>
+  {wasUpdated && (
+    <span class="note-meta-updated">updated {updatedAt}</span>
+  )}
+  {tags.length > 0 && (
+    <ul class="note-meta-tags" aria-label="Tags">
+      {tags.map((tag) => (
+        <li>
+          <a href={getTagPath(tag)}>#{tag}</a>
+        </li>
+      ))}
+    </ul>
+  )}
 </div>
+
+<style>
+  .note-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1rem;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .note-meta-updated {
+    color: var(--ink-faint);
+  }
+
+  .note-meta-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.85rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* A thin seal rule separates the tag cluster from the dates. */
+  .note-meta-tags {
+    padding-left: 1rem;
+    border-left: 1px solid var(--rule);
+  }
+
+  .note-meta-tags a {
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+
+  .note-meta-tags a:hover {
+    color: var(--seal);
+  }
+</style>
