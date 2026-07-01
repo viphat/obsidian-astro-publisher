@@ -29,7 +29,7 @@ export class GitHubContentsClient {
   private readonly fetchImpl: typeof fetch;
 
   constructor(private readonly options: GitHubContentsClientOptions) {
-    this.fetchImpl = options.fetch ?? fetch;
+    this.fetchImpl = options.fetch ?? fetch.bind(window);
   }
 
   async getFile(path: string): Promise<GitHubFile | null> {
