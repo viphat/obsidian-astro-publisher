@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Example note cover</title>
-  <desc id="desc">A simple cover image for the example note.</desc>
-  <rect width="1200" height="630" fill="#f6f1e8"/>
-  <rect x="120" y="110" width="960" height="410" rx="16" fill="#ffffff" stroke="#1f2937" stroke-width="10"/>
-  <path d="M220 240h500M220 330h760M220 420h420" stroke="#2563eb" stroke-width="28" stroke-linecap="round"/>
-</svg>

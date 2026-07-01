@@ -120,7 +120,7 @@ describe("publishCurrentNote", () => {
       }
     });
 
-    expect(url).toBe("https://notes.duongdao.family/notes/japanese-note");
+    expect(url).toBe("https://notes.duongdao.family/japanese-note");
     expect(github.putFile).toHaveBeenCalledWith(expect.objectContaining({ path: "content/notes/japanese-note.md" }));
   });
 
@@ -166,7 +166,7 @@ describe("publishCurrentNote", () => {
 
     await publishCurrentNote({ note, settings, github, adapter });
     await expect(publishCurrentNote({ note, settings, github, adapter })).resolves.toBe(
-      "https://notes.duongdao.family/notes/how-i-read-books"
+      "https://notes.duongdao.family/how-i-read-books"
     );
 
     const second = github.putFile.mock.calls[github.putFile.mock.calls.length - 1][0];

@@ -10,7 +10,7 @@ export function getPublicPathForSlug(slug: string): string {
     throw new Error(`Invalid note slug: ${slug}`);
   }
 
-  return `/notes/${slug}`;
+  return `/${slug}`;
 }
 
 // Tags are authored freely (spaces, uppercase, diacritics, nested `a/b`), so

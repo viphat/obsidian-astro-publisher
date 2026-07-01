@@ -7,8 +7,8 @@ describe("SEO helpers", () => {
   });
 
   it("builds canonical URLs without duplicate slashes", () => {
-    expect(buildCanonicalUrl("https://notes.duongdao.family/", "/notes/how-i-read-books")).toBe(
-      "https://notes.duongdao.family/notes/how-i-read-books"
+    expect(buildCanonicalUrl("https://notes.duongdao.family/", "/how-i-read-books")).toBe(
+      "https://notes.duongdao.family/how-i-read-books"
     );
   });
 });

@@ -113,7 +113,7 @@ export default class AstroPublisherPlugin extends Plugin {
   }
 
   private resolvePublicUrl(slug: string): string {
-    return `${this.settings.siteBaseUrl.replace(/\/$/, "")}/notes/${slug}`;
+    return `${this.settings.siteBaseUrl.replace(/\/$/, "")}/${slug}`;
   }
 
   private async resolveSlugFromActiveNote(): Promise<string | null> {

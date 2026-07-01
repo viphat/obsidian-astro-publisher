@@ -99,7 +99,7 @@ describe("markdown core", () => {
 
   it("rewrites published wiki links and plain-texts unpublished links", () => {
     expect(transformObsidianMarkdown("See [[How I Read Books]] and [[Private Note]].", { publishedNotes: published, slug: "current" }).markdown).toBe(
-      "See [How I Read Books](/notes/how-i-read-books) and Private Note."
+      "See [How I Read Books](/how-i-read-books) and Private Note."
     );
   });
 
@@ -126,17 +126,17 @@ describe("markdown core", () => {
 
   it("renders a note transclusion as a link instead of aborting", () => {
     expect(transformObsidianMarkdown("![[How I Read Books]]", { publishedNotes: published, slug: "current" }).markdown).toBe(
-      "[How I Read Books](/notes/how-i-read-books)"
+      "[How I Read Books](/how-i-read-books)"
     );
     expect(transformObsidianMarkdown("![[Private Note]]", { publishedNotes: published, slug: "current" }).markdown).toBe("Private Note");
   });
 
   it("resolves heading/block anchors and is case-insensitive", () => {
     expect(transformObsidianMarkdown("[[How I Read Books#Conclusion]]", { publishedNotes: published, slug: "current" }).markdown).toBe(
-      "[How I Read Books#Conclusion](/notes/how-i-read-books#conclusion)"
+      "[How I Read Books#Conclusion](/how-i-read-books#conclusion)"
     );
     expect(transformObsidianMarkdown("[[how i read books]]", { publishedNotes: published, slug: "current" }).markdown).toBe(
-      "[how i read books](/notes/how-i-read-books)"
+      "[how i read books](/how-i-read-books)"
     );
   });
 
@@ -156,13 +156,13 @@ describe("manifest core", () => {
     const text = buildPublishManifestText({
       localNotePath: "Essays/How I Read Books.md",
       destinationNotePath: "content/notes/how-i-read-books.md",
-      publicUrl: "https://notes.duongdao.family/notes/how-i-read-books",
+      publicUrl: "https://notes.duongdao.family/how-i-read-books",
       assets: ["public/assets/notes/how-i-read-books/cover.png"]
     });
     expect(text).toContain("public/assets/notes/how-i-read-books/cover.png");
     expect(text).toContain("Local note: Essays/How I Read Books.md");
     expect(text).toContain("Destination note: content/notes/how-i-read-books.md");
-    expect(text).toContain("Public URL: https://notes.duongdao.family/notes/how-i-read-books");
+    expect(text).toContain("Public URL: https://notes.duongdao.family/how-i-read-books");
     expect(text).toContain("Assets:");
     expect(text).toContain("- public/assets/notes/how-i-read-books/cover.png");
   });
@@ -171,7 +171,7 @@ describe("manifest core", () => {
     const text = buildPublishManifestText({
       localNotePath: "Essays/How I Read Books.md",
       destinationNotePath: "content/notes/how-i-read-books.md",
-      publicUrl: "https://notes.duongdao.family/notes/how-i-read-books",
+      publicUrl: "https://notes.duongdao.family/how-i-read-books",
       assets: []
     });
     expect(text).toContain("- No assets");

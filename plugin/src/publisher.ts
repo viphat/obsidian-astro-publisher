@@ -72,7 +72,7 @@ export async function publishCurrentNote(input: PublishCurrentNoteInput): Promis
   assertNoAssetNameCollisions(transformed.assetReferences);
 
   const assetDestinations = transformed.assetReferences.map((asset) => `${input.settings.assetsDirectory}/${frontmatter.slug}/${asset}`);
-  const publicUrl = `${input.settings.siteBaseUrl.replace(/\/$/, "")}/notes/${frontmatter.slug}`;
+  const publicUrl = `${input.settings.siteBaseUrl.replace(/\/$/, "")}/${frontmatter.slug}`;
   const manifestText = buildPublishManifestText({
     localNotePath: input.note.path,
     destinationNotePath,
