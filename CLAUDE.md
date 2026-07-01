@@ -35,7 +35,7 @@ cd plugin && npx vitest run -t "parses tags"                              # plug
 
 ## Development workflow
 
-This project is built with the **superpowers** skill set and TDD is expected: write the failing test first, then the implementation. Plan/progress lives in `.superpowers/sdd/progress.md` (a running ledger of tasks, deviations, and post-merge fixes) and `docs/superpowers/plans/`. **Read the progress ledger first** — it records why non-obvious decisions were made and which findings were deliberately left unfixed.
+This project is built with the **superpowers** skill set and TDD is expected: write the failing test first, then the implementation. Implementation plans live in `docs/superpowers/plans/`.
 
 ## Invariants that span multiple files (get these wrong and it breaks silently)
 
