@@ -23,7 +23,6 @@
     "Cascadia Code", Menlo, Consolas, monospace;
 
   /* Fluid type scale. */
-  --step-hero: clamp(1.6rem, 1.25rem + 1.6vw, 2.3rem);
   --step-h1: clamp(1.85rem, 1.4rem + 2.1vw, 2.7rem);
   --step-h2: clamp(1.3rem, 1.12rem + 0.9vw, 1.55rem);
   --step-h3: 1.25rem;
@@ -46,7 +45,6 @@
   --pine: #29583b;
   --moss: #e9f1e0;
   --cream: #f8f4e7;
-  --berry: #b04a4a;
 
   /* Radii and shadows. */
   --radius-card: 24px;
@@ -216,6 +214,16 @@ a:hover {
 @media (max-width: 48rem) {
   .brand-subtitle {
     display: none;
+  }
+}
+
+@media (max-width: 24rem) {
+  .wordmark-zh {
+    display: none;
+  }
+
+  .wordmark {
+    font-size: 0.92em;
   }
 }
 

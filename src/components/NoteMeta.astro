@@ -11,8 +11,8 @@ const wasUpdated = updatedAt !== createdAt;
 
 <div class="note-meta">
   <time datetime={createdAt}>{createdAt}</time>
-  {wasUpdated && <span>· updated {updatedAt}</span>}
-  {readMinutes !== undefined && <span>· {readMinutes} min read</span>}
+  {wasUpdated && <span><span aria-hidden="true">·</span> updated {updatedAt}</span>}
+  {readMinutes !== undefined && <span><span aria-hidden="true">·</span> {readMinutes} min read</span>}
 </div>
 
 <style>
