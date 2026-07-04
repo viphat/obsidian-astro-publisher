@@ -54,20 +54,6 @@
   --radius-img: 16px;
   --shadow-lift: 0 16px 44px rgba(53, 113, 74, 0.1);
   --shadow-leafy: 0 8px 26px rgba(53, 113, 74, 0.12);
-
-  --tap: 44px;
-
-  /* TEMPORARY compat aliases for pages not yet restyled (removed when the
-     redesign tasks for index/note/tag pages land). */
-  --ink-soft: var(--muted);
-  --ink-faint: var(--muted);
-  --rule: var(--line);
-  --rule-soft: var(--moss);
-  --seal: var(--leaf);
-  --seal-strong: var(--pine);
-  --paper-raised: var(--card);
-  --accent-wash: var(--moss);
-  --radius: 4px;
 }
 
 *,
