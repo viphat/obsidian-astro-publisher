@@ -2,51 +2,475 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import NoteCard from "../components/NoteCard.astro";
-import { getPublicPathForSlug } from "../lib/slug";
-import { getPublicNotes, sortNotesNewestFirst } from "../lib/notes";
+import { getPublicPathForSlug, getTagPath } from "../lib/slug";
+import { getPublicNotes, sortNotesNewestFirst, getTagGroups } from "../lib/notes";
+import { estimateReadingMinutes } from "../lib/readingTime";
 
-const notes = sortNotesNewestFirst(getPublicNotes(await getCollection("notes")));
+const publicNotes = getPublicNotes(await getCollection("notes"));
+const notes = sortNotesNewestFirst(publicNotes);
+const tagGroups = getTagGroups(publicNotes);
+
+const featured = notes[0];
+const featuredTag = featured?.data.tags?.[0];
+const featuredMinutes = featured ? estimateReadingMinutes(featured.body ?? "") : 0;
+const recent = notes.slice(1);
 ---
 
 <BaseLayout title="Dương Đào Notes" pathname="/" variant="list">
-  <p class="index-lead">
-    {notes.length} {notes.length === 1 ? "note" : "notes"}, newest first
-  </p>
+  <section class="hero">
+    <div class="hero-blob hero-blob-a" aria-hidden="true"></div>
+    <div class="hero-blob hero-blob-b" aria-hidden="true"></div>
+    <svg class="hero-leaf hero-leaf-a" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20 4C10 4 4 10 4 20c10 0 16-6 16-16Z" stroke="var(--leaf)" stroke-width="1.5" />
+      <path d="M6 18C10 14 14 10 18 6" stroke="var(--leaf)" stroke-width="1.5" />
+    </svg>
+    <svg class="hero-leaf hero-leaf-b" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20 4C10 4 4 10 4 20c10 0 16-6 16-16Z" stroke="var(--leaf)" stroke-width="1.5" />
+      <path d="M6 18C10 14 14 10 18 6" stroke="var(--leaf)" stroke-width="1.5" />
+    </svg>
+    <svg class="hero-leaf hero-leaf-c" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20 4C10 4 4 10 4 20c10 0 16-6 16-16Z" stroke="var(--leaf)" stroke-width="1.5" />
+      <path d="M6 18C10 14 14 10 18 6" stroke="var(--leaf)" stroke-width="1.5" />
+    </svg>
+
+    <div class="hero-main">
+      <p class="hero-kicker">Dương Đào Notes</p>
+      <h1 class="hero-title">Hello, thanks for stopping by 🌿</h1>
+      <p class="hero-tagline">
+        A public notebook — kept in the open, in whatever language the thought arrived in.
+      </p>
+      <div class="hero-cta">
+        {featured && (
+          <a class="pill pill-solid" href={getPublicPathForSlug(featured.data.slug)}>
+            Read the latest note
+          </a>
+        )}
+        <a class="pill pill-outline" href="/tags/">Browse tags</a>
+      </div>
+    </div>
+
+    <div class="hero-aside" aria-hidden="true">
+      <div class="hero-avatar">Đ</div>
+      <p class="hero-avatar-name">Dương Đào Notes</p>
+    </div>
+  </section>
+
   {notes.length > 0 ? (
-    <ol class="note-index">
-      {notes.map((note) => (
-        <NoteCard
-          title={note.data.title}
-          description={note.data.description}
-          href={getPublicPathForSlug(note.data.slug)}
-          updatedAt={note.data.updated_at}
-          tags={note.data.tags}
-        />
-      ))}
-    </ol>
+    <div class="feature-grid">
+      <article class="featured">
+        <a class="featured-link" href={getPublicPathForSlug(featured.data.slug)}>
+          <p class="featured-kicker">Latest</p>
+          <h2 class="featured-title">{featured.data.title}</h2>
+          <p class="featured-meta">
+            <time datetime={featured.data.updated_at}>{featured.data.updated_at}</time>
+            <span> · {featuredMinutes} min read</span>
+          </p>
+          {featured.data.description && (
+            <p class="featured-desc">{featured.data.description}</p>
+          )}
+          <p class="featured-read">Read note →</p>
+        </a>
+        {featuredTag && (
+          <a class="featured-tag" href={getTagPath(featuredTag)}>{featuredTag}</a>
+        )}
+      </article>
+
+      {tagGroups.length > 0 && (
+        <aside class="tag-card">
+          <p class="tag-kicker">Tags</p>
+          <ul class="tag-cloud">
+            {tagGroups.map((group) => (
+              <li>
+                <a class="tag-pill" href={getTagPath(group.label)}>{group.label}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+    </div>
   ) : (
-    <p class="index-empty">No notes published yet. Check back soon.</p>
+    <div class="empty-card">
+      <p>No notes published yet. Check back soon.</p>
+    </div>
+  )}
+
+  {recent.length > 0 && (
+    <section class="recent">
+      <h2 class="recent-heading">Recent notes</h2>
+      <ol class="note-index">
+        {recent.map((note) => (
+          <NoteCard
+            title={note.data.title}
+            description={note.data.description}
+            href={getPublicPathForSlug(note.data.slug)}
+            updatedAt={note.data.updated_at}
+            tags={note.data.tags}
+            readMinutes={estimateReadingMinutes(note.body ?? "")}
+          />
+        ))}
+      </ol>
+    </section>
   )}
 </BaseLayout>
 
 <style>
-  .index-lead {
-    margin: 0 0 0.25rem;
-    font-family: var(--font-mono);
+  /* ---- Hero ---------------------------------------------------------------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-hero);
+    box-shadow: var(--shadow-lift);
+    background: linear-gradient(135deg, var(--moss), var(--card) 55%, var(--cream));
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 48rem) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr) 230px;
+      padding: 3rem;
+    }
+  }
+
+  .hero-blob {
+    position: absolute;
+    width: 14rem;
+    height: 14rem;
+    border-radius: 999px;
+    opacity: 0.4;
+    filter: blur(48px);
+    pointer-events: none;
+  }
+
+  .hero-blob-a {
+    background: #cfe0bd;
+    top: -4rem;
+    right: -3rem;
+  }
+
+  .hero-blob-b {
+    background: #e8dfbe;
+    bottom: -5rem;
+    left: -3rem;
+  }
+
+  .hero-leaf {
+    position: absolute;
+    width: 1.75rem;
+    height: 1.75rem;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .hero-leaf-a {
+    top: 1.25rem;
+    left: 1.5rem;
+    transform: rotate(-20deg);
+  }
+
+  .hero-leaf-b {
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    transform: rotate(35deg);
+  }
+
+  .hero-leaf-c {
+    bottom: 1.5rem;
+    right: 3rem;
+    transform: rotate(120deg);
+  }
+
+  .hero-main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-kicker {
+    margin: 0 0 0.75rem;
     font-size: var(--step-small);
-    color: var(--ink-faint);
-    text-transform: lowercase;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    color: var(--leaf);
+  }
+
+  .hero-title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: clamp(2.5rem, 1.9rem + 2.4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .hero-tagline {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    font-size: 1.125rem;
+    max-width: 44ch;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  .pill-solid {
+    background: var(--leaf);
+    color: #fff;
+    box-shadow: var(--shadow-leafy);
+  }
+
+  .pill-solid:hover {
+    background: var(--pine);
+  }
+
+  .pill-outline {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--ink);
+  }
+
+  .pill-outline:hover {
+    border-color: var(--leaf);
+    color: var(--leaf);
+  }
+
+  .hero-aside {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .hero-aside {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.85rem;
+    }
+  }
+
+  .hero-avatar {
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 999px;
+    background: var(--card);
+    box-shadow: 0 0 0 4px var(--moss);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    color: var(--leaf);
+    font-size: 3.5rem;
+    font-weight: 600;
+  }
+
+  .hero-avatar-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-small);
+    color: var(--ink);
+  }
+
+  /* ---- Featured + sidebar -------------------------------------------------- */
+  .feature-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 64rem) {
+    .feature-grid {
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+  }
+
+  .featured {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-leafy);
+    padding: 1.75rem;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .featured:hover,
+  .featured:focus-within {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .featured-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .featured-tag {
+    position: absolute;
+    top: 1.75rem;
+    right: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    background: var(--moss);
+    color: var(--leaf);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: var(--step-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  .featured-kicker {
+    margin: 0 0 0.5rem;
+    font-size: var(--step-small);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--leaf);
+  }
+
+  .featured-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: clamp(1.75rem, 1.5rem + 1vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    transition: color 160ms ease;
+  }
+
+  .featured:hover .featured-title,
+  .featured:focus-within .featured-title {
+    color: var(--leaf);
+  }
+
+  .featured-meta {
+    margin: 0 0 0.75rem;
+    font-size: var(--step-small);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .featured-desc {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .featured-read {
+    margin: 0;
+    color: var(--leaf);
+    font-weight: 600;
+  }
+
+  .tag-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-leafy);
+    padding: 1.5rem;
+  }
+
+  .tag-kicker {
+    margin: 0 0 1rem;
+    font-size: var(--step-small);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--leaf);
+  }
+
+  .tag-cloud {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-size: var(--step-small);
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  .tag-pill:hover {
+    background: var(--moss);
+    color: var(--leaf);
+    border-color: var(--leaf);
+  }
+
+  .empty-card {
+    margin-top: 2rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-leafy);
+    padding: 1.5rem;
+    color: var(--muted);
+  }
+
+  .empty-card p {
+    margin: 0;
+  }
+
+  /* ---- Recent notes -------------------------------------------------------- */
+  .recent {
+    margin-top: 3rem;
+  }
+
+  .recent-heading {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: var(--step-h2);
+    letter-spacing: -0.01em;
   }
 
   .note-index {
     list-style: none;
+    display: grid;
+    gap: 1rem;
     margin: 0;
     padding: 0;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .index-empty {
-    margin-top: 2rem;
-    color: var(--ink-soft);
   }
 </style>
