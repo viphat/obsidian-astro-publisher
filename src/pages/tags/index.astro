@@ -1,0 +1,96 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublicNotes, getTagGroups } from "../../lib/notes";
+import { getTagPath } from "../../lib/slug";
+
+const notes = getPublicNotes(await getCollection("notes"));
+const tagGroups = getTagGroups(notes);
+---
+
+<BaseLayout title="Tags | Dương Đào Notes" pathname="/tags/" variant="list">
+  <header class="tags-header">
+    <h1 class="tags-title">Tags</h1>
+    <p class="tags-count">
+      {tagGroups.length} {tagGroups.length === 1 ? "tag" : "tags"}
+    </p>
+  </header>
+  {tagGroups.length > 0 ? (
+    <ul class="tag-cloud">
+      {tagGroups.map((group) => (
+        <li>
+          <a class="tag-pill" href={getTagPath(group.label)}>
+            #{group.label} <span class="tag-pill-count">({group.notes.length})</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="tags-empty">No tags yet.</p>
+  )}
+</BaseLayout>
+
+<style>
+  .tags-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .tags-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-h1);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .tags-count {
+    margin: 0.5rem 0 0;
+    font-size: var(--step-small);
+    color: var(--muted);
+  }
+
+  .tag-cloud {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-size: var(--step-small);
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  .tag-pill:hover {
+    background: var(--moss);
+    color: var(--leaf);
+    border-color: var(--leaf);
+  }
+
+  .tag-pill-count {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .tag-pill:hover .tag-pill-count {
+    color: var(--leaf);
+  }
+
+  .tags-empty {
+    color: var(--muted);
+  }
+</style>

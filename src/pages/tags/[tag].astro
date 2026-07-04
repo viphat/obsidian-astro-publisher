@@ -4,6 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import NoteCard from "../../components/NoteCard.astro";
 import { getPublicNotes, getTagGroups, sortNotesNewestFirst } from "../../lib/notes";
 import { getPublicPathForSlug } from "../../lib/slug";
+import { estimateReadingMinutes } from "../../lib/readingTime";
 
 export async function getStaticPaths() {
   const notes = getPublicNotes(await getCollection("notes"));
@@ -32,6 +33,7 @@ const { tag, notes } = Astro.props;
         href={getPublicPathForSlug(note.data.slug)}
         updatedAt={note.data.updated_at}
         tags={note.data.tags}
+        readMinutes={estimateReadingMinutes(note.body ?? "")}
       />
     ))}
   </ol>
@@ -44,18 +46,17 @@ const { tag, notes } = Astro.props;
 
   .tag-back {
     margin: 0 0 1rem;
-    font-family: var(--font-mono);
     font-size: var(--step-small);
-    color: var(--ink-faint);
+    font-weight: 600;
   }
 
   .tag-back a {
-    color: inherit;
+    color: var(--leaf);
     text-decoration: none;
   }
 
   .tag-back a:hover {
-    color: var(--seal);
+    color: var(--pine);
   }
 
   .tag-title {
@@ -64,24 +65,25 @@ const { tag, notes } = Astro.props;
     font-size: var(--step-h1);
     line-height: 1.1;
     letter-spacing: -0.015em;
+    color: var(--ink);
     margin: 0;
   }
 
   .tag-hash {
-    color: var(--seal);
+    color: var(--leaf);
   }
 
   .tag-count {
     margin: 0.5rem 0 0;
-    font-family: var(--font-mono);
     font-size: var(--step-small);
-    color: var(--ink-faint);
+    color: var(--muted);
   }
 
   .note-index {
     list-style: none;
+    display: grid;
+    gap: 1rem;
     margin: 1.5rem 0 0;
     padding: 0;
-    border-bottom: 1px solid var(--rule);
   }
 </style>
