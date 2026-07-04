@@ -30,35 +30,44 @@ const year = new Date().getFullYear();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#16150f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f8f1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;1,400&family=Lora:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Lora:wght@500;600&display=swap"
     />
     <Seo title={title} description={description} pathname={pathname} image={image} isNote={isNote} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="masthead">
-      <a class="wordmark" href="/">
-        <span class="wordmark-en">Dương Đào Notes</span>
-        <span class="wordmark-zh" aria-hidden="true">笔记</span>
-      </a>
-      {variant === "list" && (
-        <p class="masthead-tagline">
-          A public notebook — kept in the open, in whatever language the thought arrived in.
-        </p>
-      )}
+      <div class="masthead-inner">
+        <a class="brand" href="/">
+          <span class="brand-badge" aria-hidden="true">Đ</span>
+          <span class="brand-text">
+            <span class="wordmark">
+              Dương Đào Notes
+              <span class="wordmark-zh" aria-hidden="true">笔记</span>
+            </span>
+            <span class="brand-subtitle">A public notebook</span>
+          </span>
+        </a>
+        <nav class="masthead-nav" aria-label="Primary">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/tags/">Tags</a>
+        </nav>
+      </div>
     </header>
     <main id="main" class={`shell shell-${variant}`}>
       <slot />
     </main>
     <footer class="colophon">
-      <p>Written in Obsidian, published to the open web.</p>
-      <p>© {year} Dương Đào</p>
+      <p class="colophon-name">Dương Đào Notes</p>
+      <p class="colophon-line">
+        A public notebook — kept in the open, in whatever language the thought arrived in.
+      </p>
+      <p class="colophon-fine">© {year} Dương Đào · Written in Obsidian, published to the open web.</p>
     </footer>
   </body>
 </html>
