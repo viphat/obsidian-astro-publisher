@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import NoteLayout from "../layouts/NoteLayout.astro";
 import { getPublicNotes } from "../lib/notes";
-import { estimateReadingMinutes } from "../lib/readingTime";
 
 export async function getStaticPaths() {
   const notes = getPublicNotes(await getCollection("notes"));
@@ -14,7 +13,6 @@ export async function getStaticPaths() {
 
 const { note } = Astro.props;
 const { Content } = await render(note);
-const readMinutes = estimateReadingMinutes(note.body ?? "");
 ---
 
 <NoteLayout
@@ -26,7 +24,6 @@ const readMinutes = estimateReadingMinutes(note.body ?? "");
   tags={note.data.tags}
   coverImage={note.data.cover_image}
   language={note.data.language}
-  readMinutes={readMinutes}
 >
   <Content />
 </NoteLayout>

@@ -2,17 +2,15 @@
 type Props = {
   createdAt: string;
   updatedAt: string;
-  readMinutes?: number;
 };
 
-const { createdAt, updatedAt, readMinutes } = Astro.props;
+const { createdAt, updatedAt } = Astro.props;
 const wasUpdated = updatedAt !== createdAt;
 ---
 
 <div class="note-meta">
   <time datetime={createdAt}>{createdAt}</time>
   {wasUpdated && <span><span aria-hidden="true">·</span> updated {updatedAt}</span>}
-  {readMinutes !== undefined && <span><span aria-hidden="true">·</span> {readMinutes} min read</span>}
 </div>
 
 <style>

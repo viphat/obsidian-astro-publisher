@@ -7,17 +7,15 @@ type Props = {
   href: string;
   updatedAt: string;
   tags?: string[];
-  readMinutes?: number;
 };
 
-const { title, description, href, updatedAt, tags = [], readMinutes } = Astro.props;
+const { title, description, href, updatedAt, tags = [] } = Astro.props;
 ---
 
 <li class="note-card">
   <a class="note-link" href={href}>
     <span class="note-meta">
       <time datetime={updatedAt}>{updatedAt}</time>
-      {readMinutes !== undefined && <span class="note-read">· {readMinutes} min read</span>}
     </span>
     <span class="note-title">{title}</span>
     {description && <span class="note-desc">{description}</span>}
@@ -62,10 +60,6 @@ const { title, description, href, updatedAt, tags = [], readMinutes } = Astro.pr
     font-size: var(--step-small);
     color: var(--muted);
     font-variant-numeric: tabular-nums;
-  }
-
-  .note-read {
-    margin-left: 0.35rem;
   }
 
   .note-title {

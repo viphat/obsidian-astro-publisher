@@ -12,7 +12,6 @@ type Props = {
   tags?: string[];
   coverImage?: string;
   language?: string;
-  readMinutes?: number;
 };
 
 const {
@@ -23,8 +22,7 @@ const {
   updatedAt,
   tags = [],
   coverImage,
-  language = "en",
-  readMinutes
+  language = "en"
 } = Astro.props;
 ---
 
@@ -50,7 +48,7 @@ const {
         </ul>
       )}
       <h1 lang={language}>{title}</h1>
-      <NoteMeta createdAt={createdAt} updatedAt={updatedAt} readMinutes={readMinutes} />
+      <NoteMeta createdAt={createdAt} updatedAt={updatedAt} />
       {coverImage && <img class="note-cover" src={coverImage} alt="" />}
     </header>
     <div class="note-body-card">

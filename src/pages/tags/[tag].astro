@@ -4,7 +4,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import NoteCard from "../../components/NoteCard.astro";
 import { getPublicNotes, getTagGroups, sortNotesNewestFirst } from "../../lib/notes";
 import { getPublicPathForSlug } from "../../lib/slug";
-import { estimateReadingMinutes } from "../../lib/readingTime";
 
 export async function getStaticPaths() {
   const notes = getPublicNotes(await getCollection("notes"));
@@ -33,7 +32,6 @@ const { tag, notes } = Astro.props;
         href={getPublicPathForSlug(note.data.slug)}
         updatedAt={note.data.updated_at}
         tags={note.data.tags}
-        readMinutes={estimateReadingMinutes(note.body ?? "")}
       />
     ))}
   </ol>
