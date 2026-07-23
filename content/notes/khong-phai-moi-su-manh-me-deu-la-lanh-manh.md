@@ -8,7 +8,7 @@ tags:
   - 笔记
 language: en
 created_at: '2026-07-21'
-updated_at: '2026-07-21'
+updated_at: '2026-07-23'
 source: obsidian
 ---
 Nhiều người trong chúng ta từng nghe một câu đại loại như:
