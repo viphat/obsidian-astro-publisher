@@ -9,7 +9,7 @@ tags:
   - 天赋
 language: en
 created_at: '2026-07-04'
-updated_at: '2026-07-04'
+updated_at: '2026-07-23'
 source: obsidian
 ---
 这两节课的共同核心是：**孩子的长期发展，不是靠父母“安排”出来的，而是靠父母的认知、眼界和日常选择慢慢影响出来的。**  
