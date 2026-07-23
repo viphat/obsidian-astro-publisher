@@ -8,7 +8,7 @@ tags:
   - 笔记
 language: en
 created_at: '2026-07-19'
-updated_at: '2026-07-19'
+updated_at: '2026-07-23'
 source: obsidian
 ---
 这篇文章的核心观点是：希望不是空想，而是相信“今天正确的努力，会让明天变得更好”。
