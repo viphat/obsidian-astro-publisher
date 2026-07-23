@@ -10,7 +10,7 @@ tags:
   - kinh-te-hoc
 language: en
 created_at: '2026-07-01'
-updated_at: '2026-07-01'
+updated_at: '2026-07-23'
 source: obsidian
 ---
 ## 公平背后的效率考量：产权、激励与财富积累
