@@ -52,3 +52,20 @@ Không cần biến rửa tay thành việc phức tạp:
 - Không thấy bẩn nhưng cần khử khuẩn nhanh: gel cồn.
 - Đừng mặc định “kháng khuẩn” là tốt hơn.
 - Làm đúng việc nhỏ này đều đặn là một cách thực tế để bảo vệ sức khỏe gia đình.
+
+------
+Khi chọn gel sát khuẩn, có vài điểm cần lưu ý:
+1. Nồng độ cồn nên từ 60% đến 80%. Không nên thấp hơn 60%, vì khi đó hiệu quả sát khuẩn sẽ không đảm bảo.
+2. Nên mua chai nhỏ. Gel sát khuẩn sau khi mở nắp có thời hạn sử dụng, thông thường khoảng 90 ngày. Quá thời gian này, khả năng sát khuẩn có thể giảm.
+3. Khăn ướt chứa cồn là thành phần chính cũng có tác dụng tương tự, đồng thời lau được vết bẩn. Có thể chuẩn bị sẵn khi ra ngoài hoặc cho trẻ mang đến trường.
+
+Gel sát khuẩn thường không hại đáng kể cho da tay trẻ nếu dùng đúng cách, thỉnh thoảng và sản phẩm đạt chuẩn. Nhưng gel cồn có thể làm khô, rát hoặc kích ứng nếu dùng quá nhiều, nhất là khi trẻ có da cơ địa chàm, da nứt nẻ hoặc viêm da.
+
+Tôi sẽ dùng theo nguyên tắc này:
+- Có nước và xà phòng: ưu tiên rửa tay với xà phòng trong 20 giây. Đây vẫn là lựa chọn chính cho trẻ.
+- Đi học/đi chơi, không có chỗ rửa tay, tay không dính bẩn thấy rõ: dùng gel cồn từ 60% cồn trở lên.
+- Chọn sản phẩm có nhãn, nguồn gốc rõ, ưu tiên loại có chất dưỡng ẩm; tránh hàng không rõ thành phần.
+- Bôi vừa đủ, chà đến khi khô; không để gel dính vào mắt, không để trẻ liếm tay hay tự chơi với chai gel.
+- Trẻ nhỏ, đặc biệt dưới 5-6 tuổi, nên có người lớn hỗ trợ hoặc quan sát. Nguy cơ lớn nhất không phải hấp thu qua da mà là nuốt phải hoặc gel bắn vào mắt. CDC khuyến nghị giám sát trẻ nhỏ khi dùng gel cồn để tránh nuốt phải.cdc.gov FDA lưu ý gel cồn vào mắt có thể gây kích ứng hoặc tổn thương nghiêm trọng, tình huống xảy ra nhiều ở trẻ em.fda.gov
+
+Nếu bé có tay khô/nứt: giảm dùng gel khi có thể, rửa bằng xà phòng dịu nhẹ rồi lau khô, sau đó bôi kem dưỡng tay không mùi. Nếu rát kéo dài, nổi mẩn hoặc nứt chảy máu thì ngưng loại gel đó và hỏi bác sĩ da liễu.
