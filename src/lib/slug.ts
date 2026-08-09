@@ -22,7 +22,7 @@ export function slugifyTag(tag: string): string {
     .replace(DIACRITICS, "")
     .toLowerCase()
     .replace(/đ/g, "d")
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "")
     .replace(/-{2,}/g, "-");
 }

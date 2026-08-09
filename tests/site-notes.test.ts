@@ -25,7 +25,10 @@ describe("site slug helpers", () => {
     expect(slugifyTag("Machine Learning")).toBe("machine-learning");
     expect(slugifyTag("parent/child")).toBe("parent-child");
     expect(slugifyTag("Tôi")).toBe("toi");
+    expect(slugifyTag("中文")).toBe("中文");
+    expect(slugifyTag("中文 / 学习")).toBe("中文-学习");
     expect(getTagPath("Machine Learning")).toBe("/tags/machine-learning");
+    expect(getTagPath("中文")).toBe("/tags/中文");
   });
 });
 
@@ -62,5 +65,21 @@ describe("site note helpers", () => {
     expect(ml?.label).toBe("Machine Learning");
     expect(ml?.notes.map((note) => note.data.title)).toEqual(["A"]);
     expect(groups.map((group) => group.slug)).toEqual(["machine-learning", "writing"]);
+  });
+
+  it("groups Chinese-only tags into readable route slugs", () => {
+    const tagged = [
+      { data: { title: "A", updated_at: "2026-01-01", tags: ["中文"] } },
+      { data: { title: "B", updated_at: "2026-01-02", tags: ["中文", "学习"] } }
+    ];
+
+    const groups = getTagGroups(tagged);
+    const chinese = groups.find((group) => group.slug === "中文");
+    const study = groups.find((group) => group.slug === "学习");
+
+    expect(chinese).toMatchObject({ label: "中文" });
+    expect(chinese?.notes).toEqual([tagged[0], tagged[1]]);
+    expect(study).toMatchObject({ label: "学习" });
+    expect(study?.notes).toEqual([tagged[1]]);
   });
 });
