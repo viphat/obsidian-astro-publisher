@@ -9,11 +9,9 @@ tags:
   - review
 language: en
 created_at: '2026-08-10'
-updated_at: '2026-08-10'
+updated_at: '2026-08-11'
 source: obsidian
 ---
-# Weekly Summary — 2026-08-03 to 2026-08-10
-
 ## Overview
 This week connected long-horizon education, career, and decision-making with practical health and systems thinking. The notes emphasize choosing paths by durable fit and real conditions rather than prestige, popularity, hindsight, or short-term outcomes; several of these ideas were consolidated into human-review workflows and reusable reflection skills.
 
